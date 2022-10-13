@@ -1,0 +1,219 @@
+{
+    "attribution": {
+        "author": {
+            "name": "Filip",
+            "handle": "vilaemail",
+            "email": "vilaemail@gmail.com",
+            "website": "https://filipv.in.rs"
+        }
+    },
+    "license": "CC BY-NC-SA 4.0",
+    "name": "Connect Four",
+    "description": {
+        "short": "2 player game with goal to connect 4 of your symbols",
+        "long": "2 player game with goal to connect 4 of your symbols in 7x6 grid, where you can only place symbol on lowest non-occupied slot."
+    },
+    "players": {
+        "number": 2,
+        "turns": "clockwise"
+    },
+    "game": {
+        "startStage": "play",
+        "startView": "view-main",
+        "resolution": {
+            "x": 1170,
+            "y": 1000
+        }
+    },
+    "pieces": [
+        {
+            "id": "<% players[0] %>-playpiece",
+            "owner": "<% players[0] %>",
+            "count": 21,
+            "images": ["dot-1.svg", "dot-2.svg", "dot-3.svg"],
+            "states": [
+                {
+                    "id": "not-played",
+                    "size": {
+                        "x": 0,
+                        "y": 0
+                    }
+                },
+                {
+                    "id": "played",
+                    "size": {
+                        "x": 110,
+                        "y": 110
+                    }
+                }
+            ],
+            "transitions": [
+                {
+                    "from": "not-played",
+                    "to": "played",
+                    "sounds": ["dot-1.mp3", "dot-2.mp3", "dot-3.mp3", "dot-4.mp3", "dot-5.mp3", "dot-6.mp3", "dot-7.mp3", "dot-8.mp3", "dot-9.mp3", "dot-10.mp3"]
+                }
+            ]
+        },
+        {
+            "id": "<% players[1] %>-playpiece",
+            "owner": "<% players[1] %>",
+            "count": 21,
+            "images": ["o-1.svg", "o-2.svg"],
+            "states": [
+                {
+                    "id": "not-played",
+                    "size": {
+                        "x": 0,
+                        "y": 0
+                    }
+                },
+                {
+                    "id": "played",
+                    "size": {
+                        "x": 110,
+                        "y": 110
+                    }
+                }
+            ],
+            "transitions": [
+                {
+                    "from": "not-played",
+                    "to": "played",
+                    "sounds": ["O-1.mp3", "O-2.mp3", "O-3.mp3", "O-4.mp3", "O-5.mp3", "O-6.mp3"]
+                }
+            ]
+        }
+    ],
+    "boards": [
+        {
+            "id": "board-main",
+            "images": ["table.svg"],
+            "size": {
+                "x": 1170,
+                "y": 1000
+            },
+            "slots": [
+                {
+                    "id": "play-grid",
+                    "type": "grid",
+                    "dimensions": [6, 7],
+                    "position": {
+                        "x": 70,
+                        "y": 90
+                    },
+                    "size": {
+                        "x": 1035,
+                        "y": 820
+                    },
+                    "slot": {
+                        "id": "play-grid-one",
+                        "type": "single",
+                        "size": {
+                            "x": 110,
+                            "y": 110
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "views": [
+        {
+            "id": "view-main",
+            "position": {
+                "x": 585,
+                "y": 500
+            },
+            "size": {
+                "x": 1170,
+                "y": 1000
+            },
+            "anchor": "center",
+            "boards": [
+                {
+                    "id": "board-main",
+                    "position": {
+                        "x": 0,
+                        "y": 0
+                    }
+                }
+            ]
+        }
+    ],
+    "rules": [
+        {
+            "id": "play-turn",
+            "type": "fill-slot-action",
+            "slots": ["play-grid-one"],
+            "pieces": ["<% player %>-playpiece"],
+            "conditions": [
+                {
+                    "type": "slot-empty"
+                },
+                {
+                    "type": "piece-not-played"
+                },
+                {
+                    "type": "neighbours-condition",
+                    "up": true,
+                    "count": "maximum",
+                    "conditions": [
+                        {
+                            "type": "slot-empty"
+                        }
+                    ]
+                },
+                {
+                    "type": "neighbours-condition",
+                    "down": true,
+                    "count": "maximum",
+                    "conditions": [
+                        {
+                            "type": "slot-filled"
+                        }
+                    ]
+                }
+            ],
+            "limit": {
+                "perTurn": 1
+            }
+        },
+        {
+            "type": "exhausted-limits-condition",
+            "rules": ["play-turn"],
+            "action": "finish-turn"
+        },
+        {
+            "type": "grid-slot-condition",
+            "slots": ["play-grid"],
+            "conditions": [
+                {
+                    "type": "in-a-row",
+                    "horizontally": true,
+                    "vertically": true,
+                    "diagonally": true,
+                    "consecutive": true,
+                    "count": 4
+                }
+            ],
+            "pieces": ["<% player %>-playpiece"],
+            "action": "win"
+        },
+        {
+            "type": "grid-slot-condition",
+            "slots": ["play-grid"],
+            "conditions": [
+                {
+                    "type": "no-empty-slot"
+                }
+            ],
+            "action": "draw"
+        }
+    ],
+    "stages": [
+        {
+            "id": "play"
+        }
+    ]
+}

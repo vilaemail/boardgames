@@ -1,0 +1,61 @@
+name: boardgames
+description: Single- and Multi-player cross-platform gaming experience for "boardgame-like" games.
+publish_to: 'none'
+# Keeping it as 0.0.1 until we decide to publish and figure out semver versioning
+version: 0.0.1
+
+environment:
+  sdk: ">=2.17.6 <3.0.0"
+
+# To automatically upgrade your package dependencies to the latest versions consider running `flutter pub upgrade --major-versions`.
+# To see which dependencies have newer # versions available, run `flutter pub outdated`.
+dependencies:
+  audioplayers: ^1.0.1
+  cupertino_icons: ^1.0.2
+  flame: ^1.3.0
+  flame_audio: ^1.3.1
+  flame_svg: ^1.5.0
+  flutter:
+    sdk: flutter
+  flutter_login: ^4.0.0
+  flutter_nakama: ^0.2.0
+  go_router: ^5.0.5
+  stream_transform: ^2.0.1
+
+dev_dependencies:
+  flutter_launcher_icons: ^0.10.0
+  flutter_lints: ^2.0.0
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/icon.png
+    - assets/music/
+    - assets/sfx/
+    - assets/games/tic-tac-toe/
+    - assets/games/tic-tac-toe/gfx/
+    - assets/games/tic-tac-toe/sfx/
+    - assets/games/connect-four/
+    - assets/games/connect-four/gfx/
+    - assets/games/connect-four/sfx/
+    - assets/licenses/
+
+# Instructions https://github.com/fluttercommunity/flutter_launcher_icons#book-guide
+# Run to update icons "flutter pub run flutter_launcher_icons:main"
+flutter_icons:
+  android: true
+  ios: true
+  web:
+    generate: true
+    image_path: "assets/icon.png"
+    background_color: "#FFFFFF"
+    theme_color: "#D9D9D9"
+  windows:
+    generate: true
+    image_path: "assets/icon.png"
+    icon_size: 256
+  image_path: "assets/icon.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/icon-adaptive-foreground.png"

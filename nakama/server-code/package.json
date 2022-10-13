@@ -1,0 +1,15 @@
+{
+  "name": "server-code",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Server code to be run on nakama server for boardgames project",
+  "main": "./build/index.js",
+  "author": "",
+  "license": "SEE LICENSE IN ../../COPYING",
+  "devDependencies": {
+    "typescript": "^4.8.3"
+  },
+  "dependencies": {
+    "nakama-runtime": "github:heroiclabs/nakama-common"
+  }
+}

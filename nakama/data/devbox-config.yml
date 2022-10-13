@@ -1,0 +1,30 @@
+name: nakama-node-1
+data_dir: "./data/"
+shutdown_grace_sec: 5
+
+logger:
+    stdout: false
+    level: "debug"
+    file: "/nakama/data/logfile.log"
+    max_size: 100
+    rotation: false
+
+console:
+    port: 7351
+    username: "admin"
+    password: "password"
+    token_expiry_sec: 43200
+
+session:
+    token_expiry_sec: 3600
+    refresh_token_expiry_sec: 43200
+    encryption_key: "devbox"
+    refresh_encryption_key: "devboxrefresh"
+    single_socket: true
+    single_match: true
+
+socket:
+    server_key: "devbox"
+
+runtime:
+    http_key: "devbox"
