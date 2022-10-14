@@ -1,7 +1,7 @@
 name: PR pipeline
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
