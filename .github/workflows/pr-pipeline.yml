@@ -7,6 +7,8 @@ jobs:
   # https://github.com/bluefireteam/audioplayers/blob/main/.github/workflows/build.yaml
   build:
     runs-on: ${{ matrix.os }}
+    env:
+      PUB_CACHE: "${{ startsWith(matrix.os, 'windows') && '%LOCALAPPDATA%\Pub\Cache' || '~/.pub-cache' }}"
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
@@ -28,7 +30,17 @@ jobs:
           architecture: x64
           cache: true
       - run: flutter --version
-      - name: Install dependencies
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        id: flutter-dependencies-cache
+        with:
+          path: |
+            .dart_tool
+            .flutter-plugins
+            .flutter-plugins-dependencies
+            ${{ env.PUB_CACHE }}
+          key: flutter-dependencies-${{ matrix.os }}-${{ matrix.flutterVersion }}-${{ hashFiles('**/pubspec.lock') }}
+      - name: Install Flutter dependencies
         run: flutter pub get
 
       - name: Run lint
