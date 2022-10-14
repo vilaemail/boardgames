@@ -70,5 +70,6 @@ jobs:
         if: ${{ startsWith(matrix.os, 'macos') }}
         run: flutter build ios --release --no-codesign
 
-      - name: Run tests
-        run: dart test
+      # TODO: Enable once we write tests
+      # - name: Run tests
+      #  run: dart test
