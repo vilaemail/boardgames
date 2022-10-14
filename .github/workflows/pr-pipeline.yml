@@ -26,6 +26,7 @@ jobs:
           flutter-version: ${{ matrix.flutterVersion }}
           channel: 'stable'
           architecture: x64
+          cache: true
       - run: flutter --version
       - name: Install dependencies
         run: flutter pub get
@@ -38,7 +39,9 @@ jobs:
         if: ${{ startsWith(matrix.os, 'ubuntu') }}
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev glib-2.0 gstreamer-1.0 streamer-app-1.0 gstreamer-audio-1.0
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev glib-2.0
+      - name: Install GStreamer
+        run: sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-good gstreamer1.0-plugins-bad
       - name: Build linux
         if: ${{ startsWith(matrix.os, 'ubuntu') }}
         run: |
