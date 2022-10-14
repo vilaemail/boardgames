@@ -1,0 +1,48 @@
+name: PR pipeline
+on:
+  pull_request:
+    branches: [master]
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        sdk: [stable]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: dart-lang/setup-dart@v1.3
+        with:
+          sdk: ${{ matrix.sdk }}
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Run lint
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
+        run: dart analyze --fatal-infos
+
+      - name: Build linux
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
+        run: flutter build linux --release --obfuscate --split-debug-info=build/symbols/linux/v0.0.1
+      - name: Build web
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
+        run: ./scripts/release-web.sh
+      - name: Build android
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
+        run: ./scripts/release-android.sh
+
+      - name: Build windows
+        if: ${{ startsWith(matrix.os, 'windows') }}
+        run: flutter build windows --release --obfuscate --split-debug-info=build/symbols/linux/v0.0.1
+
+      - name: Build macos
+        if: ${{ startsWith(matrix.os, 'macos') }}
+        run: flutter build macos
+      - name: Build ios
+        if: ${{ startsWith(matrix.os, 'macos') }}
+        run: flutter build ipa --release
+
+      - name: Run tests
+        run: dart test

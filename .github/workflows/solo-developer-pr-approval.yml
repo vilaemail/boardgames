@@ -1,0 +1,26 @@
+name: Approve my-own pull request
+
+on:
+  issue_comment:
+    types:
+      - created
+
+jobs:
+  approve-my-own-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+    - uses: actions/github-script@v6
+      name: Approve My-own pull request
+      if: github.actor == 'vilaemail' &&  contains(github.event.comment.body, 'approve my-own pull request')
+      with:
+        script: |
+          github.rest.pulls.createReview({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.issue.number,
+            review_id: 1,
+            event: 'APPROVE',
+            body: 'Approving PR.'
+          })
