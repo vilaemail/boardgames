@@ -29,6 +29,7 @@ jobs:
           channel: 'stable'
           architecture: x64
           cache: true
+          cache-key: 'flutter-:os:-:version:-:hash:'
       - run: flutter --version
       - name: Cache Flutter dependencies
         uses: actions/cache@v3
@@ -39,7 +40,7 @@ jobs:
             .flutter-plugins
             .flutter-plugins-dependencies
             ${{ env.PUB_CACHE }}
-          key: flutter-dependencies-${{ matrix.os }}-${{ matrix.flutterVersion }}-${{ hashFiles('**/pubspec.lock') }}
+          key: flutterdependencies-${{ matrix.os }}-${{ matrix.flutterVersion }}-${{ hashFiles('**/pubspec.lock') }}
       - name: Install Flutter dependencies
         run: flutter pub get
 
