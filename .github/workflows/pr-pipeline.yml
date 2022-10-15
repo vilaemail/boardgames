@@ -42,6 +42,7 @@ jobs:
             ${{ env.PUB_CACHE }}
           key: flutterdependencies-${{ matrix.os }}-${{ matrix.flutterVersion }}-${{ hashFiles('**/pubspec.lock') }}
       - name: Install Flutter dependencies
+        if: steps.flutter-dependencies-cache.outputs.cache-hit != 'true'
         run: flutter pub get
 
       - name: Run lint
