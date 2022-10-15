@@ -1,31 +1,67 @@
 name: PR pipeline
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
 jobs:
+  # As we extend the pipeline here are some useful references:
+  # https://github.com/bluefireteam/audioplayers/blob/main/.github/workflows/build.yaml
   build:
     runs-on: ${{ matrix.os }}
+    env:
+      PUB_CACHE: "${{ startsWith(matrix.os, 'windows') && '%LOCALAPPDATA%\\Pub\\Cache' || '~/.pub-cache' }}"
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        sdk: [stable]
+        flutterVersion: ['3.3.4']
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: dart-lang/setup-dart@v1.3
+      - name: Install Java (needed for android building)
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
+        uses: actions/setup-java@v2
         with:
-          sdk: ${{ matrix.sdk }}
-      - name: Install dependencies
-        run: dart pub get
+          distribution: 'zulu'
+          java-version: '11'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ matrix.flutterVersion }}
+          channel: 'stable'
+          architecture: x64
+          cache: true
+          cache-key: 'flutter-:os:-:version:-:hash:'
+      - run: flutter --version
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        id: flutter-dependencies-cache
+        with:
+          path: |
+            .dart_tool
+            .flutter-plugins
+            .flutter-plugins-dependencies
+            ${{ env.PUB_CACHE }}
+          key: flutterdependencies-${{ matrix.os }}-${{ matrix.flutterVersion }}-${{ hashFiles('**/pubspec.lock') }}
+      - name: Install Flutter dependencies
+        if: steps.flutter-dependencies-cache.outputs.cache-hit != 'true'
+        run: flutter pub get
 
       - name: Run lint
         if: ${{ startsWith(matrix.os, 'ubuntu') }}
         run: dart analyze --fatal-infos
 
+      - name: Install Flutter requirements for Linux
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev glib-2.0
+      - name: Install GStreamer
+        if: ${{ startsWith(matrix.os, 'ubuntu') }}
+        run: sudo apt-get install libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev gstreamer1.0-plugins-good gstreamer1.0-plugins-bad
       - name: Build linux
         if: ${{ startsWith(matrix.os, 'ubuntu') }}
-        run: flutter build linux --release --obfuscate --split-debug-info=build/symbols/linux/v0.0.1
+        run: |
+          flutter config --enable-linux-desktop
+          flutter build linux --release --obfuscate --split-debug-info=build/symbols/linux/v0.0.1
       - name: Build web
         if: ${{ startsWith(matrix.os, 'ubuntu') }}
         run: ./scripts/release-web.sh
@@ -35,14 +71,19 @@ jobs:
 
       - name: Build windows
         if: ${{ startsWith(matrix.os, 'windows') }}
-        run: flutter build windows --release --obfuscate --split-debug-info=build/symbols/linux/v0.0.1
+        run: |
+          flutter config --enable-windows-desktop
+          flutter build windows --release --obfuscate --split-debug-info=build/symbols/linux/v0.0.1
 
       - name: Build macos
         if: ${{ startsWith(matrix.os, 'macos') }}
-        run: flutter build macos
+        run: |
+          flutter config --enable-macos-desktop
+          flutter build macos
       - name: Build ios
         if: ${{ startsWith(matrix.os, 'macos') }}
-        run: flutter build ipa --release
+        run: flutter build ios --release --no-codesign
 
-      - name: Run tests
-        run: dart test
+      # TODO: Enable once we write tests
+      # - name: Run tests
+      #  run: dart test

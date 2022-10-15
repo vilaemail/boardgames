@@ -7,6 +7,7 @@ on:
 
 jobs:
   approve-my-own-pr:
+    if: ${{ github.event.issue.pull_request }}
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -22,5 +23,5 @@ jobs:
             pull_number: context.issue.number,
             review_id: 1,
             event: 'APPROVE',
-            body: 'Approving PR.'
+            body: 'Approving PR for solo developer.'
           })
