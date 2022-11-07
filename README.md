@@ -21,7 +21,7 @@ If you want to run code for your self, read on...
 1. Install flutter from [this AUR package](https://aur.archlinux.org/packages/flutter).
 1. Ensure you can use flutter `sudo gpasswd -a <your-username> flutterusers`
 1. Install docker and nodejs (needed for nakama server) `sudo pacman -S docker docker-compose nodejs npm`
-1. Install build dependencies `sudo pacman -S cmake clang`
+1. Install build dependencies `sudo pacman -S cmake clang ninja`
 1. Install IDE `sudo pacman -S code`
 1. Open IDE `code .` and install extension named `Flutter`
 1. Reboot.
