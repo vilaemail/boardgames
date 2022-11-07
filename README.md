@@ -1,5 +1,7 @@
 # Boardgames
 
+🎬 See a demo! [Click here](https://user-images.githubusercontent.com/7682833/200405597-fbfe37e0-a41e-4497-81c2-786d632c8d3d.webm). It is 1 minute video of web app, linux native app and local docker deployment of nakama server multiplaying tic-tac-toe game.
+
 North star for the project is to provide single- and multi-player cross-platform gaming experience for "boardgame-like" games (i.e. dice/cards/"traditional" boardgames). The experience is supposed to leverage the fact we are using computing devices (phones, PCs, etc.) to enrich the gaming experience as opposed to trying to emulate real-life experience. For example, we can have computer do the time consuming and boring computations which real-life game requires people to do manually. 
 Games themselves can and should be developed outside of this repository and by anyone.
 
@@ -19,7 +21,7 @@ If you want to run code for your self, read on...
 1. Install flutter from [this AUR package](https://aur.archlinux.org/packages/flutter).
 1. Ensure you can use flutter `sudo gpasswd -a <your-username> flutterusers`
 1. Install docker and nodejs (needed for nakama server) `sudo pacman -S docker docker-compose nodejs npm`
-1. Install build dependencies `sudo pacman -S cmake clang`
+1. Install build dependencies `sudo pacman -S cmake clang ninja`
 1. Install IDE `sudo pacman -S code`
 1. Open IDE `code .` and install extension named `Flutter`
 1. Reboot.
